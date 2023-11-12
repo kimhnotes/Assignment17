@@ -24,7 +24,7 @@ int menuOption()
     cout << "\n\tChapter 17 - Assignments by Kim Hoang";
     cout << "\n\t" << string(60, char(205));
     cout << "\n\t3. Challenge 3 - Capital Quiz";
-    cout << "\n\t4. Challenge 4 - ";
+    cout << "\n\t4. Challenge 4 - File Encryption and Decryption";
     cout << "\n\t6. Challenge 6 - ";
     cout << "\n\t7. Challenge 7 - ";
     cout << "\n\t8. Challenge 8 - ";
@@ -122,10 +122,122 @@ void Challenge3()
 
 void Challenge4()
 {
-	system("cls");
-	cout << "\n\t4. Challenge 4 - ";
-	cout << "\n\t" << string(60, char(196));
+    system("cls");
+    cout << "\n\t4. Challenge 4 - File Encryption and Decryption";
+    cout << "\n\t" << string(60, char(196));
 
+    map<char, char> codes = {
+        {'A', '%'}, {'a', '9'},
+        {'B', '@'}, {'b', '#'},
+        {'C', '!'}, {'c', '$'},
+        {'D', '^'}, {'d', '&'},
+        {'E', '*'}, {'e', '('},
+        {'F', ')'}, {'f', '_'},
+        {'G', '+'}, {'g', '-'},
+        {'H', '='}, {'h', '{'},
+        {'I', '}'}, {'i', '['},
+        {'J', ']'}, {'j', '|'},
+        {'K', '\\'}, {'k', ';'},
+        {'L', ':'}, {'l', '"'},
+        {'M', '<'}, {'m', ','},
+        {'N', '>'}, {'n', '.'},
+        {'O', '?'}, {'o', '/'},
+        {'P', '1'}, {'p', '2'},
+        {'Q', '3'}, {'q', '4'},
+        {'R', '5'}, {'r', '6'},
+        {'S', '7'}, {'s', '8'},
+        {'T', '0'}, {'t', 'a'},
+        {'U', 'b'}, {'u', 'c'},
+        {'V', 'd'}, {'v', 'e'},
+        {'W', 'f'}, {'w', 'g'},
+        {'X', 'h'}, {'x', 'i'},
+        {'Y', 'j'}, {'y', 'k'},
+        {'Z', 'l'}, {'z', 'm'}
+    };
+
+    // Get the input file name
+    string fileName = inputString("\n\tEnter the name of the file to encrypt/decrypt: ", true);
+
+    fstream file;
+    file.open(fileName, ios::in);
+
+    if (file.fail())
+    {
+        cout << "\n\tERROR: Cannot read " << fileName << ".\n";
+        return;
+    }
+
+    char choice = inputChar("\n\tDo you want to (E)ncrypt or (D)ecrypt? ");
+    string resultFileName;
+
+    if (choice == 'E' || choice == 'e')
+    {
+        resultFileName = inputString("\n\tEnter the name of the file to write encrypted data: ", true);
+    }
+    else if (choice == 'D' || choice == 'd')
+    {
+        resultFileName = inputString("\n\tEnter the name of the file to write decrypted data: ", true);
+    }
+    else
+    {
+        cout << "\n\tInvalid choice. Exiting.\n";
+        return;
+    }
+
+    char key;
+    file.close();
+
+    file.open(fileName, ios::in);
+
+    if (file.fail())
+    {
+        cout << "\n\tERROR: Cannot read " << fileName << ".\n";
+        return;
+    }
+
+    string result = "";
+
+    while (file >> ws >> key)
+    {
+        if (codes.find(key) != codes.end())
+        {
+            if (choice == 'E' || choice == 'e')
+            {
+                result += codes[key];
+            }
+            else if (choice == 'D' || choice == 'd')
+            {
+                for (const auto& pair : codes)
+                {
+                    if (pair.second == key)
+                    {
+                        result += pair.first;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            result += key;
+        }
+    }
+
+    file.close();
+
+    file.open(resultFileName, ios::out);
+
+    if (file.fail())
+    {
+        cout << "\n\tERROR: Cannot write " << resultFileName << ".\n";
+        return;
+    }
+
+    file << result;
+
+    file.close();
+
+    cout << "\n\tFile encryption or decryption completed.\n";
 }
 
 void Challenge6()
