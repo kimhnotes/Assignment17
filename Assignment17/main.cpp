@@ -120,74 +120,55 @@ void Challenge3()
     cout << "Incorrect answers: " << incorrects << '\n';
 }
 
+
 void Challenge4()
 {
     system("cls");
     cout << "\n\t4. Challenge 4 - File Encryption and Decryption";
     cout << "\n\t" << string(60, char(196));
 
-    map<char, char> codes = {
-        {'A', '%'}, {'a', '9'},
-        {'B', '@'}, {'b', '#'},
-        {'C', '!'}, {'c', '$'},
-        {'D', '^'}, {'d', '&'},
-        {'E', '*'}, {'e', '('},
-        {'F', ')'}, {'f', '_'},
-        {'G', '+'}, {'g', '-'},
-        {'H', '='}, {'h', '{'},
-        {'I', '}'}, {'i', '['},
-        {'J', ']'}, {'j', '|'},
-        {'K', '\\'}, {'k', ';'},
-        {'L', ':'}, {'l', '"'},
-        {'M', '<'}, {'m', ','},
-        {'N', '>'}, {'n', '.'},
-        {'O', '?'}, {'o', '/'},
-        {'P', '1'}, {'p', '2'},
-        {'Q', '3'}, {'q', '4'},
-        {'R', '5'}, {'r', '6'},
-        {'S', '7'}, {'s', '8'},
-        {'T', '0'}, {'t', 'a'},
-        {'U', 'b'}, {'u', 'c'},
-        {'V', 'd'}, {'v', 'e'},
-        {'W', 'f'}, {'w', 'g'},
-        {'X', 'h'}, {'x', 'i'},
-        {'Y', 'j'}, {'y', 'k'},
-        {'Z', 'l'}, {'z', 'm'}
+    map<char, char> encrypt = {
+        {'A', '%'}, {'B', '@'}, {'C', '#'}, {'D', '$'},
+        {'E', '^'}, {'F', '&'}, {'G', '*'}, {'H', '('},
+        {'I', ')'}, {'J', '!'}, {'K', '+'}, {'L', '='},
+        {'M', '|'}, {'N', '['}, {'O', ']'}, {'P', '{'},
+        {'Q', '}'}, {'R', ':'}, {'S', ';'}, {'T', '"'},
+        {'U', '\''}, {'V', '?'}, {'W', ','}, {'X', '.'},
+        {'Y', '<'}, {'Z', '>'},
+        {'a', '9'}, {'b', '#'}, {'c', '*'}, {'d', '!'},
+        {'e', '('}, {'f', ')'}, {'g', '+'}, {'h', '='},
+        {'i', '|'}, {'j', '['}, {'k', ']'}, {'l', '{'},
+        {'m', '}'}, {'n', ':'}, {'o', ';'}, {'p', '"'},
+        {'q', '\''}, {'r', '?'}, {'s', ','}, {'t', '.'},
+        {'u', '<'}, {'v', '>'}
     };
 
-    // Get the input file name
-    string fileName = inputString("\n\tEnter the name of the file to encrypt/decrypt: ", true);
+    map<char, char> decrypt;
 
-    fstream file;
-    file.open(fileName, ios::in);
-
-    if (file.fail())
+    for (const auto& pair : encrypt)
     {
-        cout << "\n\tERROR: Cannot read " << fileName << ".\n";
-        return;
-    }
-
-    char choice = inputChar("\n\tDo you want to (E)ncrypt or (D)ecrypt? ");
-    string resultFileName;
-
-    if (choice == 'E' || choice == 'e')
-    {
-        resultFileName = inputString("\n\tEnter the name of the file to write encrypted data: ", true);
-    }
-    else if (choice == 'D' || choice == 'd')
-    {
-        resultFileName = inputString("\n\tEnter the name of the file to write decrypted data: ", true);
-    }
-    else
-    {
-        cout << "\n\tInvalid choice. Exiting.\n";
-        return;
+        decrypt[pair.second] = pair.first;
     }
 
     char key;
-    file.close();
 
-    file.open(fileName, ios::in);
+    char choice = inputChar("\n\tChoose operation (E - Encrypt, D - Decrypt): ", "EDed");
+
+    string fileName;
+    string outputFileName;
+
+    if (toupper(choice) == 'E')
+    {
+        fileName = inputString("\n\tEnter the name of the file to encrypt: ", true);
+        outputFileName = inputString("\n\tEnter the name of the file to write encrypted data: ", true);
+    }
+    else if (toupper(choice) == 'D')
+    {
+        fileName = inputString("\n\tEnter the name of the file to decrypt: ", true);
+        outputFileName = inputString("\n\tEnter the name of the file to write decrypted data: ", true);
+    }
+
+    fstream file(fileName, ios::in);
 
     if (file.fail())
     {
@@ -197,39 +178,41 @@ void Challenge4()
 
     string result = "";
 
-    while (file >> ws >> key)
+    while (file >> key)
     {
-        if (codes.find(key) != codes.end())
+        if (toupper(choice) == 'E')
         {
-            if (choice == 'E' || choice == 'e')
+            auto it = encrypt.find(key);
+            if (it != encrypt.end())
             {
-                result += codes[key];
+                result += it->second;
             }
-            else if (choice == 'D' || choice == 'd')
+            else
             {
-                for (const auto& pair : codes)
-                {
-                    if (pair.second == key)
-                    {
-                        result += pair.first;
-                        break;
-                    }
-                }
+                result += key;
             }
         }
-        else
+        else if (toupper(choice) == 'D')
         {
-            result += key;
+            auto it = decrypt.find(key);
+            if (it != decrypt.end())
+            {
+                result += it->second;
+            }
+            else
+            {
+                result += key;
+            }
         }
     }
 
     file.close();
 
-    file.open(resultFileName, ios::out);
+    file.open(outputFileName, ios::out);
 
     if (file.fail())
     {
-        cout << "\n\tERROR: Cannot write " << resultFileName << ".\n";
+        cout << "\n\tERROR: Cannot write " << outputFileName << ".\n";
         return;
     }
 
@@ -237,7 +220,7 @@ void Challenge4()
 
     file.close();
 
-    cout << "\n\tFile encryption or decryption completed.\n";
+    cout << "\n\tFile encryption and decryption completed.\n";
 }
 
 void Challenge6()
