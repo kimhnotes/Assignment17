@@ -159,13 +159,13 @@ void Challenge4()
 
     if (toupper(choice) == 'E')
     {
-        fileName = inputString("\n\tEnter the name of the file to encrypt: ", true);
-        outputFileName = inputString("\n\tEnter the name of the file to write encrypted data: ", true);
+        fileName = inputString("\n\tEnter the name of the file to encrypt (example file is called \"testOriginal.txt\"): ", true);
+        outputFileName = inputString("\n\tEnter the name of the file to write encrypted data (example file is called \"blankForEncryption.txt\"): ", true);
     }
     else if (toupper(choice) == 'D')
     {
-        fileName = inputString("\n\tEnter the name of the file to decrypt: ", true);
-        outputFileName = inputString("\n\tEnter the name of the file to write decrypted data: ", true);
+        fileName = inputString("\n\tEnter the name of the file to decrypt (example file is called \"test_encrypted.txt\"): ", true);
+        outputFileName = inputString("\n\tEnter the name of the file to write decrypted data (example file is called \"blankForDecryption.txt\"): ", true);
     }
 
     fstream file(fileName, ios::in);
